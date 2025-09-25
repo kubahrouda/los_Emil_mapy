@@ -1,4 +1,4 @@
-# install.packages(c("sf", "leaflet", "dplyr"))
+install.packages(c("sf", "leaflet", "dplyr"))
 
 library(sf)
 library(leaflet)
@@ -48,3 +48,4 @@ leaflet() %>%
             colors = c("green", "red"),
             labels = c("přirozeně", "umělý převoz"),
             title = "Způsob přesunu")
+
