@@ -1,4 +1,4 @@
-# install.packages(c("sf", "ggplot2", "rosm", "ggspatial", "dplyr", "lubridate"))
+install.packages(c("sf", "ggplot2", "rosm", "ggspatial", "dplyr", "lubridate"))
 
 library(sf)
 library(ggplot2)
@@ -106,3 +106,4 @@ ggplot() +
 
 
 ggsave("mapa_los.jpg", width = 8, height = 6, dpi = 300)
+
