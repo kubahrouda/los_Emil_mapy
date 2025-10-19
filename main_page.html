@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Putování losa Emila - iRozhlas</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Georgia", serif;
+      line-height: 1.6;
+      background: #faf9f7;
+      color: #222;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      background: url('https://kubahrouda.github.io/los_Emil_mapy/emil_V-Svestkova_1_og.jpg') center/cover no-repeat;
+    }
+
+
+
+
+
+
+    header::after { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,0.4); }
+    header h1, header p, .header-buttons { position: relative; z-index: 2; }
+    header h1 { font-size: 3rem; margin-bottom: 1rem; }
+    header p { font-size: 1.3rem; margin-bottom: 2rem; }
+
+
+
+    .header-buttons { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+    .header-buttons button {
+      background: rgba(255,255,255,0.8); border: none; padding: 1rem 1.5rem; border-radius: 8px;
+      font-size: 1rem; cursor: pointer; transition: all 0.3s ease;
+    }
+    .header-buttons button:hover { background: white; transform: scale(1.05); }
+
+    .content { display: flex; flex-direction: row; width: 100%; }
+
+    .left-strip {
+      position: sticky; top: 0; height: 100vh; background: #333; color: white;
+      flex-basis: 10rem; min-width: 10rem; display: flex; flex-direction: column;
+      align-items: flex-start; justify-content: flex-start;
+      padding: 1.5rem; text-align: left; font-size: 1.1rem; flex-shrink: 0;
+    }
+
+    .left-strip .label { font-weight: 700; margin-bottom: 0.25rem; }
+    .left-strip .sub { font-size: 0.95rem; opacity: 0.9; }
+
+    .sections { flex: 1; display: flex; flex-direction: column; width: 100%; }
+
+    .section { display: flex; flex-direction: row; min-height: 100vh; }
+
+    .graphic-column { border-left: 2px solid #ddd; background: #f7f7f7; }
+    .section[data-text-border="true"] { border-bottom: 2px solid #ddd; }
+
+    .text-column { padding: 3rem; background: #faf9f7; width: var(--text-width, 55%); flex: 0 0 var(--text-width, 55%); }
+    .graphic-column { width: var(--graphic-width, 45%); flex: 0 0 var(--graphic-width, 45%); }
+
+    .text-column p { margin-bottom: 2rem; font-size: 1.1rem; }
+
+    /* Nové řešení sticky grafiky s limitem výšky */
+    .sticky-graphic {
+      position: sticky; top: 0; height: 100vh; display: flex;
+      align-items: center; justify-content: center;
+      background: #eee; padding: 2rem; box-sizing: border-box;
+    }
+
+    .sticky-graphic img {
+      max-height: 90vh; /* nikdy nepřesáhne viewport */
+      max-width: 90%; /* přidává prostor kolem */
+      width: auto; height: auto; object-fit: contain; border-radius: 8px; display: block;
+      margin: auto;
+    }
+
+
+
+
+
+
+
+
+
+
+
+/* --- Horní černý pruh --- */
+.top-bar {
+  position: relative;           /* už není fixní */
+  width: 100%;
+  height: 4.3vh;
+  background-color: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* --- Vnitřní obsah (76 % = 100 % − 12 % − 12 %) --- */
+.top-bar-inner {
+  width: 76%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+/* --- Logo --- */
+.top-bar-logo img {
+  height: 100%;                 /* nikdy nepřesáhne výšku pruhu */
+  max-height: 4.3vh;
+  width: auto;
+  display: block;
+}
+
+/* --- Navigační odkazy --- */
+.top-bar-nav {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+  gap: 0.6rem;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.top-bar-nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 0.72rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  padding: 0 0.35rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s ease;
+  border-radius: 0;
+  box-sizing: border-box;
+}
+
+.top-bar-nav a:hover {
+  background-color: #222;       /* tmavě šedé pozadí při hoveru */
+}
+
+/* --- Header posunutý pod pruh --- */
+header {
+  margin-top: 0;
+
+min-height: 100vh;    /*   zabere celou výšku obrazovky */
+/*min-height: calc(100dvh - 4.3vh);   výška okna minus výška černého pruhu */
+
+  box-sizing: border-box;
+}
+
+/* --- Jemné úpravy pro menší obrazovky --- */
+@media (max-width: 1000px) {
+  .top-bar-inner {
+    width: 80%;                 /* trochu víc místa */
+  }
+  .top-bar-nav a {
+    font-size: 0.65rem;
+    padding: 0 0.25rem;
+    gap: 0.5rem;
+  }
+}
+
+/* --- Mobilní zobrazení: jen logo, zarovnané na střed --- */
+@media (max-width: 768px) {
+  .top-bar-inner {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Skryje odkazy */
+  .top-bar-nav {
+    display: none;
+  }
+
+  /* Logo přesně zarovnané a omezené na výšku pruhu */
+  .top-bar-logo {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .top-bar-logo img {
+    height: auto;
+    max-height: 90%;            /* nikdy nepřesáhne výšku pruhu */
+    width: auto;
+    object-fit: contain;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+/* --- nastavení velikosti Br tagu --- */
+br {
+   display: block;
+   margin: 10px 0;
+}
+
+
+
+/* --- Figure uvnitř sticky-graphic --- */
+.sticky-graphic figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  /* max-height: 90vh;  ← TOTO SMAZAT */
+  margin: 0;
+}
+
+/* --- Iframe se přizpůsobí samostatně --- */
+.sticky-graphic iframe {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  border: none;
+  border-radius: 8px;
+  max-height: 80vh; /* iframe bude mít stále správnou velikost */
+}
+
+/* --- Popisek pod iframe --- */
+.sticky-graphic figcaption {
+  margin-top: 0.75rem;
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.3;
+  max-width: 90%;
+  overflow-wrap: break-word; /* pěkné zalomení */
+}
+
+/* --- Úvodní text v headeru --- */
+header .intro-text {
+  max-width: 60%;          /* omezí šířku textu */
+  margin: 0 auto 1.5rem;   /* zarovnání na střed a mezera pod textem */
+  font-size: 1.2rem;
+  line-height: 1.7;
+  text-align: center;
+  position: relative;
+  z-index: 2;              /* aby text byl nad tmavým překryvem */
+}
+
+/* --- Řádek s autorem pod úvodním textem --- */
+header .author-line {
+  font-size: 1rem;
+  font-style: italic;
+  opacity: 0.85;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: rgba(255,255,255,0.9);
+  position: relative;
+  z-index: 2;
+}
+
+/* --- Kredit fotografie v headeru --- */
+.header-credit {
+  position: absolute;
+  bottom: 1rem;
+  right: 1.5rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  z-index: 3; /* musí být nad tmavým overlayem */
+  font-style: italic;
+  pointer-events: none; /* aby na text nešlo omylem kliknout */
+}
+
+/* Zajistí, že header má relativní kontext pro absolutní pozici */
+header {
+  position: relative;
+}
+
+    @media (max-width: 900px) {
+      .content { flex-direction: column; }
+      .left-strip { position: relative; height: auto; min-width: 100%; padding: 1rem; }
+      .section { flex-direction: column; }
+      .graphic-column { border: none; width: 100%; flex: 0 0 auto; }
+      .text-column { width: 100%; flex: 0 0 auto; padding: 2rem; }
+      .sticky-graphic { position: relative; height: auto; }
+    }
+  </style>
+</head>
+<body>
+
+<!--
+
+<div class="top-bar">
+  <div class="top-bar-inner">
+    <div class="top-bar-logo">
+  
+<img src="https://kubahrouda.github.io/los_Emil_mapy/Cesky_rozhlas_logo.png" alt="Český rozhlas logo">
+
+    </div>
+    <nav class="top-bar-nav">
+      <a href="https://radiozurnal.rozhlas.cz/">Radiožurnál</a>
+      <a href="https://plus.rozhlas.cz/">Plus</a>
+      <a href="https://dvojka.rozhlas.cz/">Dvojka</a>
+      <a href="https://vltava.rozhlas.cz/">Vltava</a>
+      <a href="https://wave.rozhlas.cz/">Wave</a>
+      <a href="https://www.mujrozhlas.cz/zive">Živé vysílání</a>
+      <a href="https://regiony.rozhlas.cz/">Regiony</a>
+      <a href="https://www.mujrozhlas.cz/">mujRozhlas</a>
+      <a href="http://www.radioteka.cz/">eSHOP</a>
+    </nav>
+  </div>
+</div>
+
+
+-->
+
+
+<header>
+ <!-- <img class="header-logo" 
+       src="https://kubahrouda.github.io/los_Emil_mapy/irozhlas_white_logo.png" 
+       alt="iRozhlas logo"> -->
+
+  <h1>Putování losa Emila</h1>
+  <p class="intro-text">
+    Migrace mladého losího samce, vedoucí přes několik evropských zemí, vzbudila mimořádný zájem přírodovědců i veřejnosti. Emil navštívil desítky obcí a překonal stovky menších silnic – jeho neobvyklá cesta ale zároveň vyvolává řadu otázek. V pěti rozhovorech s odborníky a v doplňujících infografikách proto přinášíme širší souvislosti, vysvětlení jeho chování i popis problémů, se kterými se nejen losi během své migrace potýkají.
+  </p>
+
+  <div class="author-line">Text a grafika: Jakub Hrouda</div>
+
+    <div class="header-buttons">
+      <button onclick="scrollToSection('sec1')">Losi ve střední Evropě - minulost a současnost</button>
+      <button onclick="scrollToSection('sec5')">Fragmentace krajiny a důležitost přesunů zvířat</button>
+     <!-- <button onclick="scrollToSection('sec5')">Sekce 5</button> -->
+      <button onclick="scrollToSection('sec7')">Emil jako osobnost - individualita ve zvířecím světě</button>
+    </div>
+  <div class="header-credit">Foto: Veronika Švestková</div>
+  </header>
+
+  <div class="content">
+    <div class="left-strip" id="leftStrip">
+      <div class="label">Sekce 1</div>
+      <div class="sub">Krátký popis nebo číslo</div>
+    </div>
+
+    <div class="sections">
+      <div class="section" id="sec1" data-strip="new" data-label="Los ve střední Evropě"
+     data-sub="Minulost a současnost" data-text-border="true" style="--text-width:50%; --graphic-width:50%;">
+        <div class="text-column">
+     
+<h2>Toulavý los a krajina plná překážek. Jeho cesta ukazuje, jak se mění středoevropská příroda</h2>
+<br>
+<p>Los Emil byl v Česku poprvé pozorován na začátku června letošního roku. Mladého losího samce tehdy zachytilo několik řidičů při jízdě po dálnici z Katovic do Bohumína. Později se na několik hodin usadil v zahradě rodinného domu v Ostravě-Petřkovicích. Z ní zamířil jihozápadním směrem – pole, louky a říční meandry chráněné krajinné oblasti Poodří mu umožnily klidný průchod krajinou bez větších překážek. V okolí Hranic na Moravě říční krajinu vystřídala mozaika polí, měst a silnic. Emil se stočil k jihovýchodu a po několika dnech dorazil k Fryštáku, kde okusoval jabloně v okolních sadech a osvěžoval se v místním rybníce.</p>
+
+<p>Jen několik kilometrů jižněji však klidná cesta skončila. Emil vstoupil do zlínské části Příluky, prošel prolukou mezi průmyslovými areály, překonal řeku Dřevnici a pokračoval podél železnice směrem k centru města. Včas se ale otočil, prošel pod železničním mostem v Želechovicích a zamířil zpět na jih. O dva dny později byl spatřen v lesích Vizovické vrchoviny, u Ludkovic, odkud pokračoval až k Uherskému Brodu - před městem přeplaval řeku Olšavu a přes Dolní Němčí dorazil až do Velké nad Veličkou. Tam ho zaujaly bělokarpatské lesy – stočil se na severovýchod a přes orchideové louky došel k rybníku za obcí Korytná, který opět přeplaval.</p>
+
+<p>Ráno následujícího dne prošel obcí Nivnice a v polích nad Dolním Mělčím uzavřel kruh svého bělokarpatského putování. Poté se znovu vydal na jihozápad a začátkem srpna na krátko zastavil dopravu v centru města Hluk. Dále se držel stranou od rušné silnice a železnice mezi Veselím nad Moravou a Střážnicí, což ho nakonec dovedlo až do slovenské Skalice. Po několika kilometrech se ale vrátil do Hodonína, kde okusoval stromy u hlavní silnice a znovu způsobil dopravní zdržení. Večer dorazil na okraj Břeclavi, kde přenocoval a brzy ráno prošel centrem města. Poté zamířil do lesů Lednicko-Valtického areálu a přešel na rakouské území.</p>
+
+<p>Na přelomu srpna a září přitáhl pozornost médií i v sousedním Rakousku. U města Mistelbach mu při pobíhání v polích fandili zaměstnanci okolních logistických areálů, a s blížící se Vídní zájem veřejnosti už jen rostl. Několik kilometrů severně od metropole naštěstí opět změnil směr, přeplaval Dunaj a zamířil na západ. Přestože ho policie i hasiči pečlivě sledovali a snažili se jej udržet daleko od vysokorychlostní železnice, u St. Pöltenu musel být preventivně zastaven vlakový provoz. O něco později, v podalpském Böhlerwerku, prošel za soumraku přímo středem města a v podhorské krajině pokračoval dál.</p>
+
+<p>U obce Sattledt se však dostal do sevření frekventovaných dálnic A1 a A9, které v okolí nenabízí žádnou možnost pro bezpečný průchod dál na východ. Poté, co se několik hodin pohyboval okolí dálničního nájedzdu, a nebylo jisté, zda nevstoupí na rušnou silnici, rozhodli veterináři o jeho uspání a převozu k šumavské hranici s Českou republikou.</p>
+
+<p>V šumavském prostředí se jeho tempo zpomalilo. Několik dní trávil v okolí Stožce, poté prošel rašeliništním komplexem Modravských slatí. Začátkem října byl pozorován u vodní nádrže Frauenau v Německu (kde také vzbudil zájem médií, některá jej nazývala „Chaos-Elch Emil“ - chaotický los Emil) a následně se vrátil na českou stranu národního parku, směrem na Prášily a Hartmanice.</p>
+
+
+        </div>
+        <div class="graphic-column">
+          <div class="sticky-graphic">
+
+<figure>
+<iframe width="1500" height="1500" src="https://kubahrouda.github.io/los_Emil_mapy/index_CARTO_DB.html"></iframe>
+
+<figcaption>Místa, na kterých byl los Emil během své cesty pozorován</figcaption>
+
+</figure>
+	
+          </div>
+
+        </div>
+      </div>
+
+<div class="section" 
+     id="sec2" 
+     data-strip="same"
+data-text-border="false" style="--text-width:55%; --graphic-width:45%;">
+
+
+
+
+
+        <div class="text-column">
+
+
+<p><b>Právě Šumavský národní park, především jeho jižní část, je domovem většiny české populace losů. To, jak se této chráněné oblasti daří losy udržet a co ovlivňuje jejich pohyb ve střední Evropě, popisuje Tomáš Janík z Katedry fyzické geografie a geoekologie Přírodovědecké fakulty UK, který se dlouhodobě zaměřuje na krajinnou ekologii, biogeografii a analýzu vhodnosti prostředí pro velké savce – včetně losa evropského. </b></p>
+
+<p><b>Jak v současnosti vypadá česká populace losa evropského? Kolik jich v Česku zhruba může žít?</b></p>
+<p>To nedokážeme říct úplně přesně. Může to být okolo dvaceti jedinců, přičemž je jejich populace koncentrována v jižní části Šumavy, v okolí Lipenské přehrady.
+Z historického pohledu se los ve středoevropské krajině vyskytoval zhruba do patnáctého století, ale poté kvůli různým tlakům z českého území mizí – kvůli lovu, fragmentaci i dalším antropogenním změnám v krajině. Novodobě se pak objevuje od padesátých let, kdy k nám začínají přicházet jedinci ze zdrojové populace v Polsku.
+Později se sice v jejich migračním koridoru postavila spousta bariér – dálnic nebo frekventovaných železnic – kvůli kterým los často úspěšně migrovat nemůže, v padesátých a šedesátých letech ale mohla migrace probíhat relativně dobře. Vzniklo tu několik menších populací – největší z nich byla na Třeboňsku. Z našeho výzkumu je patrné, že po roce 2000 probíhal přesun jádra této populace právě na jih Šumavy. Jedním z důvodů může být větší lidská činnost, další z hypotéz pak směřuje k tomu, že se los spolu se vzrůstem teplot a globální změnou klimatu začal přesouvat do chladnějších, výše položených oblastí, kde je zároveň také méně rušen.</p>
+
+<p><b>Zmínil jste, že se losi po velmi dlouhé době vracejí od padesátých let. Byla najednou polská populace tak velká, že se začala šířit i k nám?</b></p>
+<p>Ano, je to tak, pokud se nemýlím. Největší propad evropské populace byl během první poloviny dvacátého století. Souviselo to i s válkami – a po konci druhé světové války začala i polská populace losa růst. Později někteří jedinci z této relativně silné populace zamířili i k nám do Česka a vhodné útočiště našli nejvíce právě na Třeboňsku.
+Z různých analýz se ukazuje, že vyhledávali hlavně ploché části krajiny, které ale byly spjaté s vodními plochami nebo mokřady. To jsou pro losy typická útočiště, ke kterým se stahují. Zároveň pro úkryt vyhledávají hustší, zapojený porost, zatímco pro pastvu spíše rozvolněnější vegetaci s dostatkem křovisek, které okusují.</p>
+
+<p><b>Když los migruje z Polska, musí překonat velkou vzdálenost v otevřené krajině – v prostředí, které mu nevyhovuje. Tuší, že i přesto může na jihu na vhodné prostředí opět narazit, anebo vyráží náhodným směrem?</b></p>
+<p>Přiznám se, že nedokážeme úplně rozklíčovat, jestli mají nějaký „radar“, díky kterému by dokázali předpokládat vhodná stanoviště i jinde. Máme ale zdokumentovány případy bloudících losů, kteří se dostali třeba na předměstí Brna a nevěděli, kam dál. Často se potom v osídleném prostředí chovají zmateně a zároveň jsou pro ně problematické rušné bariéry v krajině.
+Okolo roku 2000 bylo několik losů v okolí dálnice D1 uspáno a převezeno, aby nedošlo ke kolizi – právě D1 je jedním z nejvíce fragmentujících fenoménů v naší krajině. I v Polsku se ale staví dálnice směřující z Německa ze severozápadu na jihovýchod, což je přesně ten koridor, kterým by losi mohli migrovat. I proto migrace ustává a v posledních letech se s ní nesetkáváme tak často.</p>
+<p>Případ losa Emila je výjimečný, protože se choval velmi nestandardně. Nakonec se ale na Šumavu – byť s pomocí člověka – dostal. Šumava i podle našich analýz vychází jako vhodná krajina pro hostění losí populace. Obecně lze říct, že v Česku taková území, kde nacházíme rašeliniště, mokřady a zároveň vhodný terén, existují. Problém je, že se tam losi z Polska, ze zdrojové populace, nedokážou dostat.</p>
+
+
+
+
+
+        </div>
+        <div class="graphic-column">
+          <div class="sticky-graphic">
+            
+
+<!-- <img src="https://picsum.photos/800/600?random=2" alt="Obrázek 2"> -->
+  
+<figure>
+<iframe width="1500" height="1500" src="https://kubahrouda.github.io/los_Emil_mapy/pocet%20zaznamu%201958-2019%20hotovo.html"></iframe>
+
+<figcaption><p>Rozšíření šumavské populace losa mezi lety 1958 a 2019</p><i>Zdroj: Janík a kol., 2021</i></figcaption>
+
+</figure>
+          </div>
+        </div>
+      </div>
+
+      <div class="section" id="sec3" data-strip="same" data-text-border="true" style="--text-width:55%; --graphic-width:45%;">
+        <div class="text-column">
+          <p><b>V celkových počtech pozorování šumavských losů jsou v posledních letech dost velké výkyvy – co je způsobuje? Lidé si losů začali víc všímat, nebo je možné, že v některých letech kvůli odlišným podmínkám tráví více času mimo les? Anebo se populace tak rychle mění?</b></p>
+<p>Hlavně bych to nejspíš přičítal větší kampani vedené obecně jako monitoring losa – díky ní je nárůst počtu pozorování zřejmý. Nesouvisí to tedy s tím, že by populace tak rychle rostla. Na druhou stranu v posledních letech pozorování ubývá. Populace je opravdu malinká a buď se zmenšuje, nebo stagnuje na úrovni nízkých desítek kusů.
+Je zajímavé dodat, že vzhledem k přeshraničnosti je problematická rakouská část území. Na rozdíl od nás nebo od Bavorska není v Rakousku los chráněný a může tam docházet k odstřelům. Los tam tedy je ve větším ohrožení než u nás.</p>
+
+<p><b>Je Šumava dost velkým a kvalitním prostorem na to, aby se tam losi udrželi bez migrace a příchodu nových jedinců? Může být šumavská populace dlouhodobě životaschopná?</b></p>
+<p>Vychází nám, že prostor a vhodnost habitatů problém nejsou. Šumava je relativně rozlehlá a i zarovnanější terény některých rašelinišť, mokřadů nebo okolí Lipenské přehrady jsou pro losa vhodnou krajinou.</p>
+<p>Zase je ale problém v tom, jak tam losy dostat. Samozřejmě by se dalo hovořit o reintrodukci nebo převozu jedinců, třeba právě z Polska. Na to by ale byla potřebná nejlépe třístranná iniciativa – z Česka, z Německa i z Rakouska – protože se vše odehrává na trojmezí tří států.
+Bylo by potřeba harmonizovat legislativu ve všech státech, aby nedocházelo k tomu, že sice přivezeme losa, abychom podpořili populaci v Česku a v Německu, ale on by se pak zaběhl do Rakouska, kde by mu hrozil odstřel. Nejprve by to tak vyžadovalo legislativní krok a pak případně přesun jedinců, kteří by se k populaci připojili a podpořili ji z hlediska početnosti i genetické diverzity.</p>
+
+<p><b>Doteď jsme se bavili o tom, jak může okolní prostředí ovlivňovat losí populaci. Může to ale být i naopak? Jak los ovlivňuje fungování okolního ekosystému?</b></p>
+<p>V českých podmínkách jej zatím tolik neovlivňuje – právě z důvodu nízkého počtu. Los je ale „okusovač“, z potravního hlediska se specializuje na okusování různých keřů a může tak udržovat některé části krajiny více rozvolněné, nezapojené. Neřekl bych, že je úplně ekosystémový inženýr, ale určitě má velký vliv na to, jak biotop, ve kterém žije, vypadá. To s sebou může přinášet další pozitivní dopady na biodiverzitu, protože taková stanoviště mohou osídlovat i zajímavější druhy rostlin. Nevytváří se tak zapojený les nebo křoviska, ale prostor zůstává pestřejší – občas s křovinami, občas volnější – díky tomu, že los keře okusuje a spořádá jich opravdu hodně. Takže pokud by se populace zvětšila, v měřítku Šumavy by to už bylo znatelné.</p>
+
+<hr><br>
+<table>
+<tr><td><img src="https://kubahrouda.github.io/los_Emil_mapy/tomas_janik.png" width="100"></td><td>    </td><td>Tomáš Janík se ve své práci na Přírodovědecké fakultě UK věnuje především krajinné ekologii a biogeografii. V roce 2021 vedl zmiňovanou souhrnnou studii výskytu losa evropského na Šumavě. Vyučuje několik předmětů zamšřených na studium změn v krajině.</td></tr>
+</table>
+
+
+        </div>
+        <div class="graphic-column">
+          <div class="sticky-graphic">
+<figure>
+<div class="flourish-embed flourish-chart" data-src="visualisation/25655922"><script src="https://public.flourish.studio/resources/embed.js"></script><noscript><img src="https://public.flourish.studio/visualisation/25655922/thumbnail" width="140%" alt="chart visualization" /></noscript></div>
+ <figcaption><p>Vývoj počtu pozorování losa na české, německé a rakouské straně Šumavy mezi lety 1958 a 2019</p><i>Data: Janík a kol., 2021</i></figcaption>
+</figure>
+
+
+          </div>
+        </div>
+      </div>
+
+<div class="section" 
+     id="sec3" 
+     data-strip="same"
+     data-text-border="true"
+ style="--text-width:50%; --graphic-width:50%;">
+
+
+        <div class="text-column">
+
+<p><b>Losi nejsou jediná velká zvířata, která v naší krajině podnikají dlouhé cesty. Spolu s nimi se v posledních desetiletích vracejí i velké šelmy – vlci a rysi, druhy, které z české přírody kdysi téměř vymizely. Proč jsou důležité pro zdravý lesní ekosystém, jak je možné sledovat jejich přesuny a jak lidé reagují na jejich návrat vysvětluje Šárka Frýbová, která se dlouhodobě věnuje jejich výzkumu a ochraně.</b></p>
+
+<p><b>Na rozdíl od losů je výskyt velkých šelem v Česku mnohem častější, a i jejich výzkum probíhá mnohem déle. Jaké metody se při jejich studiu využívají nejvíce?</b></p>
+
+<p>U šelem je to - podobně jako u losů - složité v tom, že to jsou velká zvířata obývající velké areály. A protože jich v takovém velkém teritoriu není mnoho, není jejich studium úplně jednoduché. Především ale využíváme tři metody. První z nich, ta nejklasičtější, je terénní monitoring – tedy chození po horách a hledání pobytových znaků, jako jsou stopy, trus nebo zbytky kořisti. Ze vzorků trusu pak děláme genetické analýzy, díky nimž můžeme určit původ zvířete a zjistit, jestli jde o potomka místní smečky, nebo o jedince, který přišel z jiného území. Tato možnost je ale poměrně náročná – vyžaduje hodně času i lidí, kteří mohou pravidelně vyrážet do terénu. </p>
+<p>Další metodou jsou fotopasti. Díky nim vidíme, co zvířata v terénu dělají. U rysů dokážeme na základě jedinečného rozložení skvrn na těle – které je stejné od kotěte po celý život – jednotlivá zvířata i rozpoznat. U vlků je to složitější, ale alespoň máme přehled o tom, kolik jich na daném území žije, jestli se tam vůbec vyskytují a kde se pohybují. Nejpodrobnější metodou je pak telemetrie – zvíře se vybaví GPS obojkem s vysílačkou a my tak můžeme nepřetržitě sledovat jeho pohyb, dohledávat ulovenou kořist a zjišťovat, jaká zvířata loví, nebo sledovat dálkové přesuny.</p>
+<p>Každá z těchto metod má ale své výhody i nevýhody. Telemetrie je například administrativně i technicky náročná – vyžaduje řadu povolení a odborný přístup, což je ale správné, protože jde o odbornou manipulaci se zvlášť chráněným druhem.</p>
+
+
+<p><b>V Česku je do monitoringu šelem zapojeno poměrně hodně lidí. Jak se takový projekt rozbíhal? Co vedlo k tomu, že se do výzkumu zapojilo tolik dobrovolníků?</b></p>
+
+<p>Nejsem si jistá, jestli je těch lidí opravdu tolik, ale ano – existuje velký program ochrany velkých šelem pod záštitou Hnutí DUHA – Šelmy. Ten má v rámci svých rysích a vlčích hlídek spoustu dobrovolníků, kteří se podílejí na sběru dat a terénním monitoringu. </p>
+<p>Na začátku za tím stály problémy ve vztahu lidí a velkých šelem – lidé se jich báli, šelmy občas způsobovaly škody na hospodářských zvířatech a kvůli tomu byly dlouho pronásledovány. Když se jejich populace začaly obnovovat, často čelily pytláctví. Hlavní myšlenka zakladatelů hlídek byla, že pokud se v lese pohybuje někdo, kdo šelmy sleduje a dává na ně pozor, všimnou si toho i lidé, kteří by jinak mohli pytlačit – a třeba si to rozmyslí, protože vědí, že někdo šelmy pravidelně monitoruje, a na pytláctví by se tak přišlo. </p>
+<p>Dnes tento účel částečně zůstává, ale hlavním cílem programu je výzkum šelem. A právě při něm se velké množství dobrovolníků hodí, protože – jak jsem říkala – jde o zvířata, která se pohybují na obrovských územích. Například u vlků by dnes už jenom vědci nedokázali pokrýt celou populaci, takže jsme opravdu rádi, že můžeme spolupracovat s tolika lidmi, kteří nám pomáhají.</p>
+
+
+<p><b>Díky čemu se šelmy začaly vracet zpátky do české krajiny? Dlouhou dobu jich u nás bylo opravdu málo – podobně, jako je to teď u losů. Je to hlavně tím, že je lidé přestali lovit, nebo to více souvisí třeba s lesním hospodařením?</b></p>
+
+<p>Velkou zásluhu na tom má celoevropská ochrana velkých šelem. Když byla zavedena a šelmy se přestaly legálně lovit, měly najednou prostor se začít znovu rozšiřovat do krajiny. To ale samozřejmě není jediná příčina. Důležitou roli hraje i to, že se celkově zlepšila ochrana přírody a krajiny v celé Evropě – je tu víc vhodných biotopů a také víc zvěře. Konkrétně v Česku to tedy zrovna není ani tak moc zásluha ochrany přírody, ale v jiných zemích lesní zvěř dřív téměř chyběla a až díky lepší ochraně a zlepšení prostředí se její populace obnovily – což samozřejmě prospívá i šelmám, které ji potřebují jako potravu.  Velkou roli hraje i změna veřejného mínění – lidé dnes dokážou a chtějí žít s tím, že u nás máme divokou přírodu a s ní i velké šelmy. A určitý vliv má i urbanizace – díky tomu, že lidé opouští venkov a nežije jich v odlehlejších oblastech tolik, tam naopak klid pro svůj život nacházejí šelmy.</p>
+
+
+<p><b>Zatímco los Emil při své cestě procházel přímo přes města a silnice, šelem si jen tak někdo nevšimne, i když mohou urazit podobné vzdálenosti. Jak častá je taková „neviditelná migrace“, kdy v noci urazí i desítky kilometrů, aniž by o tom někdo věděl?</b></p>
+
+<p>To se děje neustále. Šelmy – ať už rysi, nebo vlci – mají velká teritoria, průměrně kolem dvou set kilometrů čtverečních, což je v naší krajině už poměrně velká plocha. A hlavně mladí jedinci často migrují, když si hledají vlastní teritorium – a to může být opravdu daleko, v případě vlků klidně i tisíc kilometrů.</p>
+<p>Zásadní rozdíl mezi losem Emilem a vlky je v tom, že los zřejmě nemá takový strach z lidí, jaký mají vlci. Ti byli po staletí pronásledováni a přežili jen jedinci, kteří se dokázali lidem vyhýbat. Tenhle vrozený strach u nich přetrvává – proto jsou aktivní hlavně v noci, kdy se lidem nejlépe vyhnou.</p>
+
+
+<p><b>I tak ale při tak dlouhé cestě narážejí na spoustu překážek – silnice, železnice nebo jiné liniové stavby. Jak velký problém to pro ně je? Chovaly by se jinak, kdyby těch překážek nebylo tolik?</b></p>
+
+<p>Problém to je poměrně velký – hlavně u rysů a medvědů, kteří jsou víc vázaní na určitý typ prostředí, potřebný pro jejich život. Není pro ně jednoduché procházet otevřenou krajinou, kde takové prostředí chybí. Vidíme to třeba na tom, že máme rysí populace na Šumavě a v Beskydech, ale nikde jinde v Česku rysa skoro nenajdeme – i když se obě populace úspěšně rozmnožují. Rysové se prostě většinou nedokážou přes tu fragmentovanou krajinu dostat dál. Občas se objeví výjimka – máme jednoho rysa, který došel do Moravského krasu, a jednoho, který se pohybuje na Libavé. Ti to zvládli a dostali se krajinou dál na nové území. Ale většina z nich to vzdá a vrátí se zpátky do lesního prostředí.</p>
+<p>U vlků je to jednodušší, protože jsou přizpůsobivější a zvládnou projít i otevřenější krajinou. Přesto i u nich to bývá problém – dokazují to případy sražených vlků na silnicích nebo dálnicích. Naštěstí jich není moc, ale každý rok se u nás objeví aspoň dva až tři takové případy. </p>
+
+
+<p><b>V přírodě mají predátoři – třeba právě vlci nebo rysi – důležitou funkci. Ovlivňují početnost vysoké zvěře, která by jinak spásala příliš mladých stromů, a les by se nemohl přirozeně obnovovat. Blížíme se k rovnováze, nebo s tímto úkolem budou šelmy ještě nějakou dobu potřebovat pomoct?</b></p>
+
+<p>Je pravda, že v současnosti jsou u nás stavy zvěře relativně vysoké – a šelmy je samy nedokážou dostatečně snížit. Co se jim ale daří regulovat, jsou mufloni. Ti nejsou tak opatrní ani tak chytří jako třeba jeleni, a jsou menší, takže se u nich opravdu ukazuje, že tam, kde se objevily šelmy, počty muflonů klesly. 
+U jelení nebo srnčí zvěře je to jiné – kapacita vlků není neomezená. Takové zvíře neuloví každý den, takže sami o sobě tak vysoké počty nezredukují. Až jednou populace zvěře nebudou tak vysoké, mohou být šelmy schopny udržovat rovnováhu.  Momentálně to tak ale není - pokud chceme mít zdravé lesy, které se budou přirozeně obnovovat, je potřeba aby mezi myslivci a šelmami probíhala spolupráce. </p>
+<p>Třeba v Beskydech žijí rysi už dlouhou dobu, vlci tam výrazněji přibývají asi deset let. A i když vlků je vlků postupně více, podle mysliveckých statistik se odlov vysoké zvěře nijak výrazně nezměnil – zvěře je tam stále stejně.</p>
+
+
+<p><b>Dá se říct, že si lidé funkci velkých šelem v ekosystému uvědomují a začínají je vnímat pozitivně, anebo většinou stále převažuje strach?</b></p>
+
+<p>Myslím, že si lidé význam šelem uvědomují - jinak by nebyly chráněné a celková situace by nebyla taková, jaká je. Nicméně strach tam určitě stále je, a to je přirozená věc. Vlka jsme v krajině dlouho neměli – na některých místech i víc než dvě stě let –  a naprosto jsme si odvykli na život s šelmou. A bohužel je takové odvyknutí je mnohem rychlejší, než opětovná adaptace na její přítomnost. A odvyknout si je mnohem snazší, než si znovu zvykat.</p>
+<p>Je proto důležité věnovat se osvětě – ukazovat, že respekt k šelmám je na místě, ale zároveň není důvod se bát chodit do lesa, i když tam ta šelma je.</p>
+
+<hr><br>
+<table>
+<tr><td><img src="https://kubahrouda.github.io/los_Emil_mapy/sarka_frybova.png" width="100"></td><td>    </td><td>Šárka Frýbová působí na Mendlově univerzitě v Brně. Dlouhodobě se věnuje terennímu monitoringu velkých šelem v Beskydech, ve svém výzkumu se zaměřuje na změny v prostorové aktivitě vlků a jejich chování v kulturní krajině. </td></tr>
+</table>
+
+
+        </div>
+        <div class="graphic-column">
+          <div class="sticky-graphic">
+<figure>
+            <iframe width="1500" height="700" src="https://www.youtube.com/embed/v4piFI7-4tI?si=pAY6R6KHoP7H7U5S" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+ <figcaption><i>Video: Šelmy.cz</i></figcaption>
+</figure>
+          </div>
+        </div>
+      </div>
+
+<div class="section" 
+     id="sec5" 
+     data-strip="new"
+     data-label="Fragmentace krajiny"
+     data-sub="a důležitost přesunů zvířat" data-text-border="true" style="--text-width:55%; --graphic-width:45%;">
+
+        <div class="text-column">
+
+         <p> <b>Migrující zvířata ve střední Evropě stále častěji naráží na síť dopravních staveb, oplocených ploch a intenzivně využívaného území. Fragmentace prostředí se tak stává jedním z hlavních faktorů, které ovlivňují nejen migraci velkých savců, ale i fungování celých ekosystémů. Důsledkům ztráty krajinné prostupnosti, způsobům, kterými se zvířata vyrovnávají s novými překážkami, i možnostem jak ekologickou konektivitu zlepšit, se věnuje Ondřej Sedláček z Katedry ekologie Přírodovědecké fakulty Univerzity Karlovy.</b></p>
+          
+
+<p><b>Co přesně znamená fragmentace krajiny? A jak ovlivňuje zvířata?</b></p>
+<p>Fragmentace se týká celistvosti biotopů – tedy podobných typů prostředí, které jsou rozděleny do menších, izolovaných celků. V praxi to znamená, že biotopy jsou od sebe dál, nebo že mezi nimi leží krajinná mozaika, kterou zvířata neumí překonat – třeba proto, že je tvořena nevhodným prostředím, nebo protože v ní vznikly fyzické bariéry. Když například mezi dva lesy vložíme pole, lesní zvířata přes něj budou chodit nerada.</p>
+<p>Hodnotit fragmentaci krajiny ale není jednoduché. Kdybychom se podívali na letecké snímky z poloviny 20. století, krajina by na nich vypadala mnohem rozdrobeněji – pole i další plochy byly menší. Kdybychom tehdejší fragmentaci krajiny exaktně změřili, pravděpodobně by nám vyšla vyšší než dnes. Jenže tehdejší krajina byla i mnohem mozaikovitější – skládala se z většího počtu malých plošek různých typů. Dnes máme naopak mnohem více velkých, homogenních ploch – třeba lánů polí.</p>
+<p>Kupodivu právě to může být problém třeba pro hmyz. Menší druhy nejsou schopné překonávat velké souvislé plochy, a tak pro ně byla mozaikovitá krajina mnohem prostupnější. Tehdy zvládly přeletět nebo přeběhnout sto metrů z jedné louky na druhou. Dnes jsou vhodné biotopy často kilometr od sebe, a když se navíc kosí velkoplošně, pro modrásky, okáče nebo vážky nejbližší vhodný biotop příliš daleko. Krajina tak může být pro ně fakticky víc fragmentovaná než dřív – i když to tak na první pohled nevypadá.</p>
+<p>U velkých zvířat, jako je los, je situace jiná. Pro ně jsou zásadní především liniové stavby – silnice, dálnice, železniční koridory nebo přehrady. Zatímco řeku většina zvířat přebrodí, přehradu už ne. I pro ně se tak krajina stává stále více rozdělenou a fragmentovanou.</p>
+
+<p><b>Takže menším druhům prospívá pestrá krajina s menšími plochami blízko sebe, zatímco větším zvířatům větší celky tolik nevadí – jenže ta zase narážejí na silnice a železnice?</b></p>
+<p>Přesně tak. U velkých zvířat se bavíme spíš o lesních biotopech, které bývají větší a méně rozdrobené, což souvisí i s lesnickým hospodařením. Ale ano – bariéry jsou zásadní problém pro řadu druhů. Pro rysa, vlka, losa nebo i jeleny jsou často velmi těžko překonatelné.</p>
+
+<p><b>Proč je vůbec důležité, aby byla krajina prostupná a zvířata mohla volně migrovat?</b></p>
+<p>To je důležitá otázka. Myslím, že při stavbě ekoduktů lidé často nahlížejí na věc tak, že chtějí například umožnit, aby srnec ráno přešel pást se na druhou stranu a večer se zase vrátil, nebo aby přes přechody během dne probíhali zajíci. Jenže z biologického pohledu jsou často mnohem důležitější ty vzácnější události, ke kterým tak často nedochází – například to, aby zvířata z úspěšnějších populací, které se dobře rozmnožují, měla možnost šířit se i jinam. To může být i případ losa. Pokud se jim v Polsku daří, hledají nová teritoria, objevují v krajině nové příležitosti a snaží se dál šířit.</p>
+<p>Druhá zásadní věc je výměna jedinců mezi populacemi. Pokud k takové komunikaci a genovému toku nedochází, populace se izolují a těm menším hrozí vyhynutí. Mohou za to dvě věci – zaprvé jsou takové populace mnohem náchylnější na jakékoli výkyvy, ať už v dostupnosti potravy, nebo třeba v počtu narozených mláďat. Zadruhé v malých populacích může docházet k různým genetickým změnám - při příbuzenském křížení dochází ke ztrátě genetické variability a k akumulaci škodlivých genů. Taková populace pak není schopna dobře reagovat třeba na nové nemoci nebo predátory a nemůže se přizpůsobovat klasickou evoluční cestou, při které jsou všichni jedinci trochu jiní a každý odolá něčemu jinému  – když mají všichni jedinci stejnou genetickou výbavu, mohou tak snadno vyhynout všichni najednou. Malé populace proto potřebují, aby se k nim čas od času dostali jedinci zvenčí a přinesli „nové geny“.</p>
+
+<p><b>Jak se s tím dá bojovat? Jak udělat krajinu průchodnější?</b></p>
+<p>Dá se to řešit na dvou úrovních. Tou první je samotná krajinná mozaika – tedy to, jak krajina vypadá. Pomáhají nerušené koridory podobného prostředí, kudy se mohou zvířata pohybovat. losovi například není vlastní procházet volnou krajinou v Polabí. Raději se drží podél vodotečí, kolem kterých rostou měkké dřeviny, které žere, a kde se může aspoň částečně krát. Občas nějakou větší plochu přeběhne, ale do otevřené krajiny se jen tak nepustí. Migrační trasy velkých zvířat přitom známe poměrně dobře – stačilo by tedy myslet na to, aby potřebné biotopy na těchto trasách nezmizely.</p>
+<p>Druhou, a v dnešní krajině asi ještě důležitější úrovní, jsou bariéry, které vytváříme – silnice, dálnice, nebo železnice. Nejde jen o nové stavby, ale i o stále hustší provoz. V 70. letech losi dálnici D1 ještě občas přeběhli – v noci tam skoro nic nejelo. Dneska je tam i v noci auto za autem a propustnost dálnice je minimální – a když už se na ni zvíře dostane, může docházet ke střetům, které jsou v případě losa opravdu nebezpečné. Ve Švédsku proto mají takzvaný „losí test“, při kterém zkouší, zda je auto schopné rychlé změny směru, když mu do cesty vstoupí los – protože tam je to běžný problém. Aby se podobným střetům předešlo, přibývá u nás oplocení dálnic, což je sice mnohem bezpečnější pro losy i pro člověka, ale ze silnice se stává téměř dokonalá bariéra.</p>
+<p>A co s tím? Aby ubývalo silnic, snižoval se provoz nebo se nestavěly ploty, to je samozřejmě hloupost. Zvířatům pak pomáhají různé přechody. Menší druhy – obojživelníci, hlodavci, malé šelmy – silnice rády podlézají. Třeba vydra silnici raději podleze propustí, než aby šla po ekoduktu. Pro větší druhy by pak měly být právě ty ekodukty, tedy zelené přechody přes dálnice, které všichni známe. Jenže těch je u nás stále málo a ne vždy jsou na správných místech. Často vznikají u obchvatů měst, kde po nich nakonec jezdí zemědělská technika nebo chodí lidé. Někdy chybí návaznost na krajinu a vedou odnikud nikam nebo z vesnice na pole, jindy jsou prostě příliš úzké - ze světové literatury víme, že aby plnily svou funkci správně, měly by mít alespoň 40 metrů. Los nepřejde přes osmimetrový most obklopený hlukem a světly. Ze současných 37 ekoduktů u nás jich svou funkci opravdu plní asi jen 13, což je na celou republiku velmi málo. </p>
+<p>Známý je i případ losa z roku 2001, který tři dny v kuse stál u svodidel dálnice D1 a nebyl schopný jít dál – i když tam tehdy ještě nestál plot. Ukazuje to, jak zásadní problém pro tato zvířata představují už jen hluk a světlo. Nakonec jej tehdy museli uspat a převézt na druhou stranu.</p>
+<p>Provoz je zároveň problém i při stavbě nových ekoduktů, protože třeba D1 prostě nelze jednoduše uzavřít. Inženýři z ČVUT proto vyvíjejí způsob, jak přechody budovat modulárně – třeba v noci během několika hodin. Most by se složil z několika dílů a naklopil přes dálnici najednou. My s nimi spolupracujeme, aby konstrukce vyhovovala i potřebám zvířat. Díky modulům by ekodukt mohl být i dostatečně široký – třeba z deseti sedmimetrových částí složených za sebou.  Myslím si, že tohle je správná cesta.</p>
+
+<p><b>Staví se v jiných částech Evropy ekodukty lépe? Třeba ve Skandinávii, kde je mnohem víc velkých migrujících zvířat? </b></p>
+<p>Na to jsme si dělali rešerši – myslím, že nejdále jsou v tomto směru například v Německu, Dánsku, zemích Beneluxu nebo ve Francii - tam vznikají ekodukty dostatečně velké a na smysluplných místech. I u nás se to ale v posledních sedmi letech docela zlepšuje. Ještě před patnácti lety vznikaly za obrovské peníze ekodukty, které byly spíše na ostudu. Dnes už je to ale i u nás lepší.</p>
+<p>Nejlépe o jejich funkčnosti vypovídají údaje o pohybu zvířat – například z GPS sledování. Jeden vlk třeba běžel podél dálnice sedmdesát kilometrů, pak se otočil a ušel osmdesát kilometrů zpět, než konečně narazil na ekodukt, který mohl použít. I když je to pro něj vzdálenost, kterou bez problému urazí za dva dny. Je proto klíčové sledovat, jak na které ekodukty jednotlivé druhy reagují, protože i to se může výrazně lišit. Je také důležité přemýšlet o tom, na která zvířata je ekodukt cílen a co by na něm mělo být. Kopytníci například nemají rádi ekodukty úplně zarostlé hustými křovinami – necítí se tam bezpečně, protože nevidí kolem sebe. Naopak šelmy preferují více zarostlé přechody, aby nebyly vidět. I to je tedy potřeba při plánování zohlednit. </p>
+
+<p><b>Na závěr – zlepšuje se u nás propustnost krajiny? Když za deset nebo dvacet let vyrazí další los jako Emil, dorazí na Šumavu rychleji než on?</b></p>
+
+<p>Určitě se to zlepšuje. Za jak dlouho ale postavíme dostatek přechodů a dalších opatření, to asi nikdo neví. Každé nové zlepšení prostupnosti krajiny však pomůže. A pak už to bude jen o náhodě, jestli los ten správný přechod najde, nebo ne – a jestli se mu podaří dostat jihozápadním směrem z Polska na Šumavu, do Novohradských hor a dalších vhodných oblastí.</p>
+
+
+
+
+        </div>
+        <div class="graphic-column">
+          <div class="sticky-graphic">
+ <figure>
+<iframe width="1500" height="1500" src="https://kubahrouda.github.io/los_Emil_mapy/Biotop%20vybran%C3%BDch%20zvl%C3%A1%C5%A1t%C4%9B%20chr%C3%A1n%C4%9Bn%C3%BDch%20druh%C5%AF%20velk%C3%BDch%20savc%C5%AF.html"></iframe>
+<figcaption>
+ <p>Jádrové oblasti výskytu velkých savců (losa, rysa, vlka a medvěda), migrační koridory, které je propojují, a kritická místa, na kterých jsou koridory přerušeny.</p><i>Zdroj: AOPK</i> 
+ <!-- <p>Rozšíření šumavské populace losa mezi lety 1958 a 2019</p><i>Zdroj: Janík a kol., 2021</i> -->
+</figcaption>
+
+
+
+</figure>         
+
+ <!-- <figure>
+<iframe width="1500" height="1500" src="https://kubahrouda.github.io/los_Emil_mapy/Biotop%20vybran%C3%BDch%20zvl%C3%A1%C5%A1t%C4%9B%20chr%C3%A1n%C4%9Bn%C3%BDch%20druh%C5%AF%20velk%C3%BDch%20savc%C5%AF.html"></iframe>
+
+<figcaption>
+Jádrové oblasti výskytu velkých savců (losa, rysa, vlka a medvěda), migrační koridory, které je propojují, a kritická místa, na kterých jsou koridory přerušeny.<br><i>Zdroj: AOPK</i>
+</figcaption>
+
+</figure> -->
+          </div>
+        </div>
+      </div>
+
+      <div class="section" id="sec6" data-strip="new" data-text-border="true" style="--text-width:50%; --graphic-width:50%;">
+        <div class="text-column">
+          <p>Zde bude doplňující rozhovor ke krajinné fragmentaci.</p>
+       
+        </div>
+        <div class="graphic-column">
+          <div class="sticky-graphic">
+            <img alt="Zde bude doplňující grafika ke krajinné fragmentaci">
+          </div>
+        </div>
+      </div>
+
+
+
+
+<div class="section" 
+     id="sec7" 
+     data-strip="new"
+     data-label="Emil jako osobnost"
+     data-sub="Individualita ve zvířecím světě" data-text-border="true" style="--text-width:55%; --graphic-width:45%;">
+        <div class="text-column">
+
+       
+
+
+<p><b>Proč je pro zvířata výhodné bát se různých věcí? A proč se občas liší to, čeho se bojí?</b></p>
+<p>Obecně je hlavní funkcí plachosti ochrana před predátory – a zrovna plachost je u zvířat jedním z těch osobnostních rysů, které můžeme dobře měřit. Dlouho se dá dobře sledovat u obratlovců a i ve výzkumu bezobratlých jsou teď aktuálně pokroky. Je to také rys, který souvisí s dalšími vlastnostmi, na jejichž základě můžeme rozdělit, jak se chovají jedinci v rámci populace nebo i druhu. Typicky se určuje základní rozdělení na „slow“ a „fast“, neboli pomalý a rychlý typ. Když si představíme sýkorky, ty „slow“, pomalejší, budou spíše opatrné a měly by k problémům přistupovat s větším důrazem na bezpečnost. Ty „rychlé“ pak více riskují nebo mohou být agresivnější. I v rámci jednoho druhu se tak stává, že někteří jedinci jsou zdrženliví a jiní naopak odvážněji vstupují do konfliktů s predátory, ale zároveň lépe hledají novou potravu. Míra plachosti může být samozřejmě souhrou genetiky, zkušeností i třeba embryonálního vývoje.</p>
+
+<p><b>Na to jsem se právě chtěl zeptat – odkud se individualita bere? Je spíš předem daná, nebo ji ovlivňuje i prostředí?</b></p>
+<p>Když máme rodiče, kteří jsou odvážnější, a i jejich rodiče byli odvážní, je vyšší šance, že související skupina genů bude i u potomka podobná. To znamená, že se pravděpodobně narodí potomek, který bude také odvážnější. Stále je to ale souhra mnoha náhodných interakcí a situací, které dávají vznik genetické výbavě daného zvířete. I pokud v sobě zvíře má genetickou informaci pro odvahu, vliv má i to, jak hladký průběh má jeho vývin – například jestli je maminka ve stresu, když se o něj stará, nebo už předtím, než se narodí.
+A roli samozřejmě hraje i prostředí, ve kterém se zvíře narodí. Pokud je nehostinné a zvíře od počátku cítí tlak, nemá dost potravy nebo je v okolí hodně dravců, může se jeho osobnost změnit – i přesto, že mělo genetický základ pro odvahu, nebo naopak.</p>
+
+<p><b>Jak se individualita liší u různých skupin zvířat? Je možné, že dlouhověká a inteligentní zvířata to mají jinak než krátkověká, která nepotřebují řešit složité problémy?</b></p>
+<p>To je velká otázka, která se intenzivně studuje zhruba od počátku devadesátých let, kdy se zvířecí osobnost začala více sledovat. A nejsem si jistý, zda už je rozhodnuto, jak to doopravdy je. Dá se předpokládat, že právě vyšší zvířata – savci, ptáci a obecně obratlovci – kteří mají vyspělé kognitivní schopnosti a často i vysokou míru sociality, mohou být flexibilnější. Jsou tak schopni lépe se přizpůsobit prostředí a mají za život v různých rysech intenzivnější trénink. Tím pádem by mohli mít osobnostní profil komplexnější.</p>
+<p>Zároveň se ale individualita studuje i u různých druhů ryb, které také dokážou vykazovat různé prvky agresivity nebo sociálnosti. Takže bych určitě neřekl, že všichni savci mají komplexnější individualitu než ryby – ale jsou indicie, že právě kognitivní schopnosti nebo míra sociálního uspořádání určují, jak se zvíře bude chovat. A znovu za to trochu může i prostředí – nakonec i u lidí vidíme, že naše schopnosti dokážou narůst do ohromných rozměrů, pokud máme dobré podmínky.</p>
+
+<p><b>Jaké výhody pak mohou z větší flexibility v chování jedinců plynout pro celý druh?</b></p>
+<p>To je velice důležitá věc – obecně platí, že populace, která má větší rozptyl osobnostních rysů a ve které se zvířata chovají odlišně i na základě stejné situace, dokáže lépe přežít v měnícím se prostředí. Pokud by prostředí bylo stabilní a neměnilo se, mohla by si populace vystačit s průměrným chováním a nějakou variabilitu nemusí vůbec vymýšlet. Když ale zvířata žijí v rychle se měnícím prostředí – třeba v tom, které tvoří lidé, ve městech, ve vesnicích – musí být připravena reagovat na jednotlivé výzvy a nemohou se spokojit s tím, že budou dělat stále totéž.</p>
+<p>Dá se tedy říct, že populace s větší šíří osobnostních typů obecně přežívají lépe – a i celé populace se mohou chovat odlišně podle prostředí. Třeba u myší se uvádí, že ty, které žijí synantropně a mají dost potravy, se chovají méně agresivně a jsou sociálnější než myši, které potkáme v divoké přírodě a které se musí o každé sousto prát.</p>
+
+<p><b>A pokud se podíváme jen na úroveň jedinců – může být pro konkrétní zvíře výhodné chovat se jinak než ostatní? Když to vztáhneme konkrétně na losa Emila, je možné, že díky menší plachosti prochází krajinou efektivněji než jiní losi?</b></p>
+<p>Myslím, že los Emil určitě čerpá z toho, že je mladý samec, který se v novém prostředí pohybuje v období říje. Velmi intenzivně se tak snaží najít si samičku a vhodné teritorium, takže tam bude určitě hrát roli jeho věk. Proto má nejspíš tendenci zkoušet nové věci. Víme, že spousta mláďat – i když on už není úplně mládě – má tendenci si více hrát a zkoušet různé riskantní chování. Je možné, že si tak zvykl a tolik mu nevadí putovat naší krajinou.</p>
+<p>Ale jeho chování se ale může v průběhu života úplně změnit. Až dospěje, může zjistit, že takové prostředí vůbec není vhodné a že je lepší být spíš plachý. Něco podobného vidíme na Slovensku u medvědů – někteří jsou v mládí odvážní a přibližují se k městům, ale později zažijí něco špatného, nebo si najdou vhodné teritorium v lese, a už se k městům nevracejí. Emil zatím může mít to štěstí, že se mu nic hrozného nestalo, a lidskou přítomnost možná spíše vyhledává, protože tam může snadněji najít potravu. A protože nemá žádnou špatnou zkušenost, riskne to – zatímco spoustu jiných jedinců ani nespatříme.</p>
+<p>I tak je u mladého samce těžké říct, že když je Emil odvážný a klidný, zůstane takový i za dva nebo tři roky. I to může záviset na jeho věku, zkušenostech a prostředí.
+Těžké je také posoudit, jestli je pro něj takové chování vlastně dobré – zda to pro něj třeba není jediná možnost, jak si najít dost potravy, jestli před okolím neutíká nebo není stále ve stresu. Tyto věci z pouhého pozorování nepoznáme.</p>
+
+<p><b>Kdyby se tak ale choval pořád – a byl díky tomu úspěšnější, byla by to pro něj evoluční výhoda – a zároveň by se i jeho potomci chovali podobně, existuje šance, že se časem bude podobně chovat větší část české populace losů? U jiných zvířat se přece různé populace mohou chovat zcela odlišně – v Česku je člověk rád, když zahlédne lišku ze sta metrů, zatímco v Tatrách lišky žadoní o jídlo.</b></p>
+<p>To je velice zajímavá otázka a rád bych na ni odpověděl jednoduše a jasně – ale jak už jsem říkal, chování a jeho projevy závisí na prostředí i genetice. Emil může být jeden z těch odvážnějších losů a jeho potomci mohou sdílet stejné projevy, ale faktorů, které to ovlivňují, je hodně. I kdyby byli geneticky odvážnější, mohou se ocitnout v oblasti s vyšším predačním tlakem, kde je budou plašit třeba vlci nebo lidé – a jejich chování se tak může úplně změnit.</p>
+<p>Co se týče lišek, je to skvělý příklad. Existují populace, které jsou nakloněné k lidem a žebrají o potravu, ale je otázkou, jak by si taková liška poradila v tvrdé zimě bez lidí. Je tedy těžké říct, že to pro ně může být výhodné – protože nevíme, zda odvážné chování, které u lišek pozorujeme, pomáhá k přežití i v jiných obdobích nebo typech prostředí. Často je pak otázkou, jak se dokážou adaptovat na měnící se podmínky a třeba se i vracet ke svým původním vzorcům chování.</p>
+<p>Tady mluvíme o tzv. behaviorální plasticitě – když je to vhodné, mohou být některá zvířata například náklonnější k lidem, ale když se prostředí změní, dokážou se přizpůsobit novým zdrojům potravy. A behaviorální plasticita nám popis chování různých zvířat opět ztěžuje. Můžeme na základě různých experimentů říct, že se určitá zvířata jeví odvážně. V jiné situaci se ale dokážou novým podmínkám skvěle přizpůsobit – a nakonec nás překvapit.</p>
+
+
+
+
+
+ </div>
+        <div class="graphic-column">
+          <div class="sticky-graphic">
+<figure>           
+<div class="flourish-embed flourish-map" data-src="visualisation/25322568"><script src="https://public.flourish.studio/resources/embed.js"></script><noscript><img src="https://public.flourish.studio/visualisation/25322568/thumbnail" width="100%" alt="map visualization" /></noscript></div>
+ <figcaption><p>Hustota lokalit pozorování losa evropského zapsaných do aplikace iNaturalist</p><i>Data: GBIF</i></figcaption>
+</figure>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+
+
+<!--
+<div class="section" 
+     id="sec8" 
+     data-strip="new"
+     data-label="Emil jako osobnost"
+     data-sub="Individualita ve zvířecím světě" data-text-border="true" style="--text-width:55%; --graphic-width:45%;">
+        <div class="text-column">
+          <p>Vestibulum feugiat tellus ac nisi imperdiet convallis.</p>
+          <p>Curabitur scelerisque turpis vitae nisl malesuada.</p>
+        </div>
+        <div class="graphic-column">
+          <div class="sticky-graphic">
+            <img src="https://picsum.photos/600/700?random=4" alt="Obrázek 4">
+          </div>
+        </div>
+      </div>
+
+
+
+
+<div class="section" 
+     id="sec9" 
+     data-strip="same"
+     data-text-border="true" style="--text-width:50%; --graphic-width:50%;">
+
+        <div class="text-column">
+<h3> Zdroje a použitá literature:</h3>          
+<p>Vestibulum feugiat tellus ac nisi imperdiet convallis.</p>
+          <p>Curabitur scelerisque turpis vitae nisl malesuada.</p>
+        </div>
+        <div class="graphic-column">
+          <div class="sticky-graphic">
+            <img src="https://picsum.photos/600/700?random=4" alt="Obrázek 4">
+          </div>
+        </div>
+      </div>
+
+
+-->
+
+  <script>
+    const sections = document.querySelectorAll('.section');
+    const leftStrip = document.getElementById('leftStrip');
+
+function updateLeftStrip() {
+  const mid = window.innerHeight * 0.5;
+  let current = null;
+  for (const sec of sections) {
+    const r = sec.getBoundingClientRect();
+    if (r.top <= mid && r.bottom >= mid) { current = sec; break; }
+  }
+  if (!current) return;
+
+  if (current.dataset.strip === 'new') {
+    const label = current.dataset.label || current.id.replace('sec', 'Sekce ');
+    const sub = current.dataset.sub || '';
+    leftStrip.querySelector('.label').textContent = label;
+    leftStrip.querySelector('.sub').textContent = sub;
+  }
+}
+
+    window.addEventListener('scroll', updateLeftStrip);
+    window.addEventListener('resize', updateLeftStrip);
+    updateLeftStrip();
+
+    function scrollToSection(id) {
+      const section = document.getElementById(id);
+      if (section) section.scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+
+</body>
+</html>
