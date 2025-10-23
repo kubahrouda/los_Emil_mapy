@@ -41,7 +41,7 @@
 
     .header-buttons { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
     .header-buttons button {
-      background: rgba(255,255,255,0.8); border: none; padding: 1rem 1.5rem; border-radius: 8px;
+      background: rgba(255,255,255,0.6); border: none; padding: 1rem 1.5rem; border-radius: 8px;
       font-size: 1rem; cursor: pointer; transition: all 0.3s ease;
     }
     .header-buttons button:hover { background: white; transform: scale(1.05); }
@@ -199,6 +199,42 @@ min-height: 100vh;    /*   zabere celou výšku obrazovky */
     width: auto;
     object-fit: contain;
   }
+
+
+header {
+    min-height: 100vh; /* zabírá přesně výšku displeje */
+    background-position: 30% center; /* posune pozadí doleva o 30 % */
+  }
+
+  header .intro-text {
+    max-width: 85%;
+    font-size: 1rem;     /* menší text */
+    line-height: 1.4;    /* těsnější řádkování */
+  }
+
+  header h1 {
+    font-size: 2rem;     /* menší nadpis */
+  }
+
+  .header-buttons {
+    gap: 0.5rem;
+  }
+
+  .header-buttons button {
+    padding: 0.7rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* --- Úprava 3: případné jemné doladění pro velmi malé telefony --- */
+@media (max-width: 480px) {
+  header .intro-text {
+    font-size: 0.9rem;
+  }
+  header h1 {
+    font-size: 1.6rem;
+  }
+
 }
 
 
@@ -455,7 +491,7 @@ Bylo by potřeba harmonizovat legislativu ve všech státech, aby nedocházelo k
 
 <hr><br>
 <table>
-<tr><td><img src="https://kubahrouda.github.io/los_Emil_mapy/tomas_janik.png" width="100"></td><td>    </td><td>Tomáš Janík se ve své práci na Přírodovědecké fakultě UK věnuje především krajinné ekologii a biogeografii. V roce 2021 vedl zmiňovanou souhrnnou studii výskytu losa evropského na Šumavě. Vyučuje několik předmětů zamšřených na studium změn v krajině.</td></tr>
+<tr><td><img src="https://kubahrouda.github.io/los_Emil_mapy/tomas_janik.png" width="100"></td><td>    </td><td><b>Tomáš Janík</b> se ve své práci na Přírodovědecké fakultě UK věnuje především krajinné ekologii a biogeografii. V roce 2021 vedl zmiňovanou souhrnnou studii výskytu losa evropského na Šumavě. Vyučuje několik předmětů zaměřených na studium změn v krajině.</td></tr>
 </table>
 
 
@@ -528,7 +564,7 @@ U jelení nebo srnčí zvěře je to jiné – kapacita vlků není neomezená. 
 
 <hr><br>
 <table>
-<tr><td><img src="https://kubahrouda.github.io/los_Emil_mapy/sarka_frybova.png" width="100"></td><td>    </td><td>Šárka Frýbová působí na Mendlově univerzitě v Brně. Dlouhodobě se věnuje terennímu monitoringu velkých šelem v Beskydech, ve svém výzkumu se zaměřuje na změny v prostorové aktivitě vlků a jejich chování v kulturní krajině. </td></tr>
+<tr><td><img src="https://kubahrouda.github.io/los_Emil_mapy/sarka_frybova.png" width="100"></td><td>    </td><td><b>Šárka Frýbová</b> působí na Mendlově univerzitě v Brně. Dlouhodobě se věnuje terennímu monitoringu velkých šelem v Beskydech, ve svém výzkumu se zaměřuje na změny v prostorové aktivitě vlků a jejich chování v kulturní krajině. </td></tr>
 </table>
 
 
@@ -583,7 +619,10 @@ U jelení nebo srnčí zvěře je to jiné – kapacita vlků není neomezená. 
 <p>Určitě se to zlepšuje. Za jak dlouho ale postavíme dostatek přechodů a dalších opatření, to asi nikdo neví. Každé nové zlepšení prostupnosti krajiny však pomůže. A pak už to bude jen o náhodě, jestli los ten správný přechod najde, nebo ne – a jestli se mu podaří dostat jihozápadním směrem z Polska na Šumavu, do Novohradských hor a dalších vhodných oblastí.</p>
 
 
-
+<hr><br>
+<table>
+<tr><td><img src="https://kubahrouda.github.io/los_Emil_mapy/ondrej_sedlacek.png" width="100"></td><td>    </td><td><b>Ondřej Sedláček</b> působí na Katedře ekologie Přírodovědecké fakulty UK. Zabývá se moderními přístupy k ochraně přírody v kulturní krajině a jejich praktickým využitím, zaměřuje se však také na studium ptačích společenstev v savanách a tropických lesích. </td></tr>
+</table>
 
         </div>
         <div class="graphic-column">
